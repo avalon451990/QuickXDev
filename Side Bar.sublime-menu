@@ -38,4 +38,12 @@
     "args": {
         "dirs": []
     }
+},
+{
+    "caption": "Clean User Definition",
+    "id": "clean_user_definition",
+    "command": "quickx_clean_user_definition",
+    "args": {
+        "dirs": []
+    }
 }]
