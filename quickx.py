@@ -8,6 +8,7 @@ import sublime
 import sublime_plugin
 import functools
 import os
+import shutil
 import datetime
 import json
 import re
@@ -296,6 +297,32 @@ class QuickxRebuildUserDefinitionCommand(sublime_plugin.WindowCommand):
     def is_visible(self, dirs):
         return self.is_enabled(dirs)
 
+class QuickxCleanUserDefinitionCommand(sublime_plugin.WindowCommand):
+    def __init__(self,window):
+        super(QuickxCleanUserDefinitionCommand,self).__init__(window)
+        self.lastTime=0
+
+    def run(self, dirs):
+        curTime=time.time()
+        if curTime-self.lastTime<3:
+            sublime.status_message("Clean frequently!")
+            return
+        self.lastTime=curTime
+        #删除缓存目录
+        if os.path.exists(TEMP_PATH):
+            shutil.rmtree(TEMP_PATH, True)
+        sublime.status_message("Clean user definition complete!")
+    
+    def is_enabled(self, dirs):
+        if not os.path.exists(TEMP_PATH):
+            return False
+        return len(dirs)==1
+
+    def is_visible(self, dirs):
+        if not os.path.exists(TEMP_PATH):
+            return False
+        return self.is_enabled(dirs)
+        
 class QuickxCreateNewProjectCommand(sublime_plugin.WindowCommand):
     def run(self, dirs):
         quick_cocos2dx_root = checkQuickxRoot()
